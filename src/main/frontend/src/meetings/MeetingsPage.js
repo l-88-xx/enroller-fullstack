@@ -28,17 +28,12 @@ async function handleNewMeeting(meeting) {
      body: JSON.stringify(meeting),
      headers: { 'Content-Type': 'application/json' }
  });
-/* if (response.ok) {
+ if (response.ok) {
+     const newMeeting = await response.json();
      const nextMeetings = [...meetings, meeting];
      setMeetings(nextMeetings);
      setAddingNewMeeting(false);
- }*/
-if (response.ok) {
-    const savedMeeting = await response.json();
-    const nextMeetings = [...meetings, savedMeeting];
-    setMeetings(nextMeetings);
-    setAddingNewMeeting(false);
-}
+ }
 }
 
       // Usuwanie spotkań
@@ -53,6 +48,7 @@ if (response.ok) {
             }
         }
 
+
     return (
         <div>
             <h2>Zajęcia ({meetings.length})</h2>
@@ -66,9 +62,4 @@ if (response.ok) {
                               onDelete={handleDeleteMeeting}/>}
         </div>
     )
-
-
-
-
-
 }
