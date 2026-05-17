@@ -28,15 +28,21 @@ async function handleNewMeeting(meeting) {
      body: JSON.stringify(meeting),
      headers: { 'Content-Type': 'application/json' }
  });
- if (response.ok) {
+/* if (response.ok) {
      const nextMeetings = [...meetings, meeting];
      setMeetings(nextMeetings);
      setAddingNewMeeting(false);
- }
+ }*/
+if (response.ok) {
+    const savedMeeting = await response.json();
+    const nextMeetings = [...meetings, savedMeeting];
+    setMeetings(nextMeetings);
+    setAddingNewMeeting(false);
+}
 }
 
       // Usuwanie spotkań
-        async function handleDeleteMeeting(meeting) {
+    /*    async function handleDeleteMeeting(meeting) {
             const response = await fetch(`/api/meetings/${meeting.id}`, {
                 method: 'DELETE',
             });
@@ -44,7 +50,22 @@ async function handleNewMeeting(meeting) {
                 const nextMeetings = meetings.filter(m => m !== meeting);
                 setMeetings(nextMeetings);
             }
+        }*/
+
+
+        async function handleDeleteMeeting(meeting) {
+            const response = await fetch(`/api/meetings/${meeting.id}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                const nextMeetings =
+                    meetings.filter(m => m.id !== meeting.id);
+                setMeetings(nextMeetings);
+            }
         }
+
+
 
 
     return (
