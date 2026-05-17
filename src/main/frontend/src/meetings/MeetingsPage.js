@@ -1,3 +1,4 @@
+import {useEffect} from "react";
 import {useState} from "react";
 import NewMeetingForm from "./NewMeetingForm";
 import MeetingsList from "./MeetingsList";
@@ -6,6 +7,22 @@ export default function MeetingsPage({username}) {
     const [meetings, setMeetings] = useState([]);
     const [addingNewMeeting, setAddingNewMeeting] = useState(false);
 
+// Pobieranie
+
+// useEffect wykonuje tylko przy pierwszym renderowaniu
+useEffect(() => {
+    const fetchMeetings = async () => {
+        const response = await fetch(`/api/meetings`);
+        if (response.ok) {
+            const meetings = await response.json();
+            setMeetings(meetings);
+        }
+    };
+    fetchMeetings();
+}, []);
+
+
+//Dodawanie spotkań
 async function handleNewMeeting(meeting) {
  const response = await fetch('/api/meetings', {
      method: 'POST',
@@ -18,12 +35,10 @@ async function handleNewMeeting(meeting) {
      setAddingNewMeeting(false);
  }
 }
-
     function handleDeleteMeeting(meeting) {
         const nextMeetings = meetings.filter(m => m !== meeting);
         setMeetings(nextMeetings);
     }
-
     return (
         <div>
             <h2>Zajęcia ({meetings.length})</h2>
