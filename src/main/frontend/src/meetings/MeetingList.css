@@ -1,0 +1,10 @@
+/*.button.button.red {
+border-color: red;
+color: red;
+}*/
+
+
+.button.button-outline.button-red {
+    border-color: red;
+    color: red;
+}

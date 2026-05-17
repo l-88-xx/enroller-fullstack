@@ -8,7 +8,6 @@ export default function MeetingsPage({username}) {
     const [addingNewMeeting, setAddingNewMeeting] = useState(false);
 
 // Pobieranie
-
 // useEffect wykonuje tylko przy pierwszym renderowaniu
 useEffect(() => {
     const fetchMeetings = async () => {
@@ -35,10 +34,19 @@ async function handleNewMeeting(meeting) {
      setAddingNewMeeting(false);
  }
 }
-    function handleDeleteMeeting(meeting) {
-        const nextMeetings = meetings.filter(m => m !== meeting);
-        setMeetings(nextMeetings);
-    }
+
+      // Usuwanie spotkań
+        async function handleDeleteMeeting(meeting) {
+            const response = await fetch(`/api/meetings/${meeting.id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                const nextMeetings = meetings.filter(m => m !== meeting);
+                setMeetings(nextMeetings);
+            }
+        }
+
+
     return (
         <div>
             <h2>Zajęcia ({meetings.length})</h2>
@@ -52,4 +60,9 @@ async function handleNewMeeting(meeting) {
                               onDelete={handleDeleteMeeting}/>}
         </div>
     )
+
+
+
+
+
 }
