@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/meetings")
@@ -36,6 +35,7 @@ public class MeetingRestController {
         return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
     }
 
+    // GET/meetings
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getMeeting(@PathVariable("id") long id) {
         Meeting meeting = meetingService.findById(id);
@@ -46,6 +46,7 @@ public class MeetingRestController {
         return new ResponseEntity(meeting, HttpStatus.OK);
     }
 
+    // GET/meetings/{id}
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteMeeting(@PathVariable("id") long id) {
         Meeting meeting = meetingService.findById(id);
@@ -56,6 +57,7 @@ public class MeetingRestController {
         return new ResponseEntity<Meeting>(meeting, HttpStatus.NO_CONTENT);
     }
 
+    // POST/meetings
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> addMeeting(@RequestBody Meeting meeting) {
         if (meetingService.alreadyExist(meeting)) {
@@ -66,6 +68,7 @@ public class MeetingRestController {
         return new ResponseEntity<>(meeting, HttpStatus.CREATED);
     }
 
+    // PUT/meetings/{id}
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updateMeeting(@PathVariable("id") long id, @RequestBody Meeting meeting) {
         Meeting currentMeeting = meetingService.findById(id);
@@ -76,4 +79,61 @@ public class MeetingRestController {
         meetingService.update(meeting);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    // Zapisanie do spotkania
+    // POST /meetings/{id}/participants - dodaje uczestnika do spotkania
+    @RequestMapping(value = "/{id}/participants", method = RequestMethod.POST)
+    public ResponseEntity<?> addParticipant(
+            @PathVariable("id") long id,
+            @RequestBody Participant participantRequest) {
+
+        Meeting meeting = meetingService.findById(id);
+        if (meeting == null) {
+            return new ResponseEntity<>("Meeting not found", HttpStatus.NOT_FOUND);
+        }
+        Participant participant = participantService.findByLogin(participantRequest.getLogin());
+        if (participant == null) {
+            if (participant == null) {
+                participant = new Participant();
+                participant.setLogin(participantRequest.getLogin());
+                participant.setPassword("");
+
+                participantService.add(participant);
+            }
+        }
+        if (meeting.getParticipants().contains(participant)) {
+            return new ResponseEntity<>(
+                    "Participant already registered",
+                    HttpStatus.CONFLICT);
+        }
+        meeting.addParticipant(participant);
+        meetingService.update(meeting);
+        return new ResponseEntity<>(participant, HttpStatus.CREATED);
+    }
+
+    // Wypisanie ze spotkania
+    // DELETE meetings/{id}/participants/{login}
+    @RequestMapping(value = "/{id}/participants/{login}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeParticipant(
+            @PathVariable("id") long id,
+            @PathVariable("login") String login) {
+
+        Meeting meeting = meetingService.findById(id);
+        if (meeting == null) {
+            return new ResponseEntity<>("Meeting not found", HttpStatus.NOT_FOUND);
+        }
+
+        Participant participant = participantService.findByLogin(login);
+        if (participant == null) {
+            return new ResponseEntity<>("Participant not found", HttpStatus.NOT_FOUND);
+        }
+
+        if (!meeting.getParticipants().contains(participant)) {
+            return new ResponseEntity<>("Participant not registered in meeting", HttpStatus.CONFLICT);
+        }
+        meeting.removeParticipant(participant);
+        meetingService.update(meeting);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

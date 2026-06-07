@@ -1,6 +1,7 @@
+/*
 import './MeetingList.css';
 
-export default function MeetingsList({meetings, onDelete}) {
+export default function MeetingsList({meetings, onDelete, username, onJoin, onLeave}) {
     return (
         <table>
             <thead>
@@ -16,6 +17,16 @@ export default function MeetingsList({meetings, onDelete}) {
                     <td>{meeting.title}</td>
                     <td>{meeting.description}</td>
                     <td>
+                      const joined = meeting.participants.some( p => p.login === username );
+                         {
+                         joined
+                         ? <button type="button" onClick={() => onLeave(meeting)} >
+                                  Wypisz się
+                           </button>
+                                 : <button type="button" onClick={() => onJoin(meeting)}   >
+                                   Zapisz się
+                           </button>
+                        }
                          <button type ="button"
                               className ="button button-outline button-red"
                              onClick={() => onDelete(meeting)}>
@@ -25,6 +36,90 @@ export default function MeetingsList({meetings, onDelete}) {
                 </tr>)
             }
             </tbody>
+        </table>
+    );
+}*/
+
+
+import './MeetingList.css';
+
+export default function MeetingsList({
+    meetings,
+    username,
+    onDelete,
+    onJoin,
+    onLeave
+}) {
+
+    return (
+        <table>
+
+            <thead>
+            <tr>
+                <th>Nazwa spotkania</th>
+                <th>Opis</th>
+                <th>Akcje</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {
+                meetings.map((meeting, index) => {
+
+                    const joined =
+                        meeting.participants.some(
+                            p => p.login === username
+                        );
+
+                    return (
+                        <tr key={index}>
+
+                            <td>{meeting.title}</td>
+
+                            <td>{meeting.description}</td>
+
+                            <td>
+
+                                {
+                                    joined
+
+                                        ? <button
+                                            type="button"
+                                            onClick={() => onLeave(meeting)}
+                                          >
+                                            Wypisz się
+                                          </button>
+
+                                        : <button
+                                            type="button"
+                                            onClick={() => onJoin(meeting)}
+                                          >
+                                            Zapisz się
+                                          </button>
+                                }
+
+                                {
+                                    meeting.participants.length === 0 &&
+
+                                    <button
+                                        type="button"
+                                        className="button button-outline button-red"
+                                        onClick={() => onDelete(meeting)}
+                                    >
+                                        Usuń
+                                    </button>
+                                }
+
+                            </td>
+
+                        </tr>
+                    );
+                })
+            }
+
+            </tbody>
+
         </table>
     );
 }

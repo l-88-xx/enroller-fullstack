@@ -30,20 +30,64 @@ async function handleNewMeeting(meeting) {
  });
  if (response.ok) {
      const newMeeting = await response.json();
-     const nextMeetings = [...meetings, meeting];
+     const nextMeetings = [...meetings, newMeeting];
      setMeetings(nextMeetings);
      setAddingNewMeeting(false);
  }
 }
-
       // Usuwanie spotkań
         async function handleDeleteMeeting(meeting) {
             const response = await fetch(`/api/meetings/${meeting.id}`, {
                 method: 'DELETE',
             });
-
             if (response.ok) {
                 const nextMeetings = meetings.filter(m => m.id !== meeting.id);
+                setMeetings(nextMeetings);
+            }
+        }
+
+        // zapisanie na spotkanie
+        async function handleJoinMeeting(meeting) {
+             const response = await fetch(`/api/meetings/${meeting.id}/participants`,{
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                   body: JSON.stringify({
+                        login: username
+                    })
+                });
+            if (response.ok) {
+                const nextMeetings = meetings.map(m => {
+                    if (m.id === meeting.id)
+                    {
+                        return {...m,
+                        participants: [
+                                  ...m.participants,
+                                  { login: username }
+                              ]
+                        };
+                    }
+                    return m;
+                });
+                setMeetings(nextMeetings);
+            }
+        }
+
+        // wypisanie
+        async function handleLeaveMeeting(meeting) {
+            const response = await fetch(`/api/meetings/${meeting.id}/participants/${username}`,
+                {
+                    method: 'DELETE'
+                }
+            );
+            if (response.ok) {
+                const nextMeetings = meetings.map(m => {
+                    if (m.id === meeting.id) {
+                        return {
+                            ...m, participants:m.participants.filter(p => p.login !== username)
+                        };
+                    }
+                    return m;
+                });
                 setMeetings(nextMeetings);
             }
         }
@@ -59,7 +103,9 @@ async function handleNewMeeting(meeting) {
             }
             {meetings.length > 0 &&
                 <MeetingsList meetings={meetings} username={username}
-                              onDelete={handleDeleteMeeting}/>}
+                              onDelete={handleDeleteMeeting}
+                              onJoin={handleJoinMeeting}
+                              onLeave={handleLeaveMeeting}/>}
         </div>
     )
 }
