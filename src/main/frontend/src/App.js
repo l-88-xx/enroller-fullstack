@@ -3,6 +3,9 @@ import './App.css';
 import {useState} from "react";
 import LoginForm from "./LoginForm";
 import UserPanel from "./UserPanel";
+// obsługa błędów
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
     const [loggedIn, setLoggedIn] = useState('');
