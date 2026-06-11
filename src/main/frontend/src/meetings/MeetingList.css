@@ -3,4 +3,22 @@
     color: red;
 }
 
+table th:nth-child(3),
+table td:nth-child(3) {
+    text-align: left;
+    white-space: nowrap;
+}
+
+table th:nth-child(3),
+table td:nth-child(3) {
+    width: 140px;
+    text-align: left;
+}
+
+table th,
+table td {
+    text-align: left;
+    vertical-align: middle;
+}
+
 
