@@ -90,6 +90,7 @@ async function handleNewMeeting(meeting) {
                    const nextMeetings =
                        meetings.filter(m => m.id !== meeting.id);
                    setMeetings(nextMeetings);
+                   toast.success('Zostało usunięte spotkanie');
                } else {
                    const message = await response.text();
                    toast.error(message);
