@@ -20,7 +20,9 @@ export default function EditMeetingForm({
         });
     }
     return (
-        <form onSubmit={submit}>
+        <form
+            className="form-slide"
+            onSubmit={submit}>
             <h3>Edycja spotkania</h3>
             <label>Nazwa</label>
             <input

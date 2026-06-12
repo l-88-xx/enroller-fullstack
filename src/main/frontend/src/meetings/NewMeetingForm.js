@@ -28,7 +28,9 @@ export default function NewMeetingForm({onSubmit}) {
  }
 
     return (
-        <form onSubmit={submit}>
+        <form
+            className="form-slide"
+            onSubmit={submit}>
             <h3>Dodaj nowe spotkanie</h3>
             <label>Nazwa</label>
             <input type="text" value={title}
