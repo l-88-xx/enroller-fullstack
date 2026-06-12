@@ -6,11 +6,13 @@ import MeetingsList from "./MeetingsList";
 import { toast } from 'react-toastify';
 // ładowanie
 import Loader from '../components/Loader';
+import EditMeetingForm from "./EditMeetingForm";
 
 export default function MeetingsPage({username}) {
     const [meetings, setMeetings] = useState([]);
     const [loading, setLoading] = useState(false);
     const [addingNewMeeting, setAddingNewMeeting] = useState(false);
+    const [editingMeeting, setEditingMeeting] = useState(null);
     const token = localStorage.getItem('token');
 
 // Pobieranie
@@ -24,7 +26,6 @@ useEffect(() => {
                  Authorization: `Bearer ${token}`
              }
          });
-
          if (response.ok) {
              const meetings = await response.json();
              setMeetings(meetings);
@@ -32,13 +33,11 @@ useEffect(() => {
              toast.error('Błąd, nie pobrano spotkań');
          }
      } finally {
-
          setLoading(false);
      }
  };
     fetchMeetings();
 }, []);
-
 
 //Dodawanie spotkań
 async function handleNewMeeting(meeting) {
@@ -54,7 +53,6 @@ async function handleNewMeeting(meeting) {
         toast.error('Spotkanie już istnieje w wybranym terminie.');
         return;
     }
-
     setLoading(true);
     try {
         const response = await fetch('/api/meetings', {
@@ -81,7 +79,6 @@ async function handleNewMeeting(meeting) {
         setLoading(false);
     }
 }
-
       // Usuwanie spotkań
        async function handleDeleteMeeting(meeting) {
            setLoading(true);
@@ -108,7 +105,6 @@ async function handleNewMeeting(meeting) {
                setLoading(false);
            }
        }
-
         // zapisanie na spotkanie
         async function handleJoinMeeting(meeting) {
         setLoading(true);
@@ -126,7 +122,6 @@ async function handleNewMeeting(meeting) {
                         })
                     }
                 );
-
                 if (response.ok) {
                     const nextMeetings = meetings.map(m => {
                         if (m.id === meeting.id) {
@@ -154,12 +149,50 @@ async function handleNewMeeting(meeting) {
               }
         }
 
+        // edycja
+        async function handleUpdateMeeting(
+            updatedMeeting
+        ) {
+            const token =
+                localStorage.getItem('token');
+            const response = await fetch(
+                `/api/meetings/${updatedMeeting.id}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type':
+                            'application/json',
+                        Authorization:
+                            `Bearer ${token}`
+                    },
+                    body: JSON.stringify(
+                        updatedMeeting
+                    )
+                }
+            );
+            if (response.ok) {
+                const nextMeetings =
+                    meetings.map(m =>
+                        m.id === updatedMeeting.id
+                            ? updatedMeeting
+                            : m
+                    );
+                setMeetings(nextMeetings);
+                setEditingMeeting(null);
+                toast.success(
+                    'Spotkanie zostało zaktualizowane'
+                );
+            } else {
+                toast.error(
+                    'Nie udało się zapisać zmian'
+                );
+            }
+        }
+
         // wypisanie
     async function handleLeaveMeeting(meeting) {
     setLoading(true);
-
     try {
-
         const response = await fetch(
             `/api/meetings/${meeting.id}/participants/${username}`,
           {
@@ -169,9 +202,7 @@ async function handleNewMeeting(meeting) {
               }
           }
         );
-
         if (response.ok) {
-
             const nextMeetings = meetings.map(m => {
                 if (m.id === meeting.id) {
                     return {
@@ -194,14 +225,12 @@ async function handleNewMeeting(meeting) {
 }
     return (
         <div>
-
             {loading && (
                 <div className="loading-overlay">
                     <Loader />
                 </div>
             )}
             <h2>Zajęcia ({meetings.length})</h2>
-
             {
                 addingNewMeeting
                     ? <NewMeetingForm onSubmit={(meeting) => handleNewMeeting(meeting)}/>
@@ -211,17 +240,28 @@ async function handleNewMeeting(meeting) {
                         Dodaj nowe spotkanie
                       </button>
             }
-            {meetings.length > 0 &&
-                <MeetingsList
-                    meetings={meetings}
-                    username={username}
-                    onDelete={handleDeleteMeeting}
-                    onJoin={handleJoinMeeting}
-                    onLeave={handleLeaveMeeting}
+            {
+                editingMeeting &&
+                <EditMeetingForm
+                    meeting={editingMeeting}
+                    onSubmit={
+                        handleUpdateMeeting
+                    }
                 />
+            }
+            {meetings.length > 0 &&
+               <MeetingsList
+                   meetings={meetings}
+                   username={username}
+                   onDelete={handleDeleteMeeting}
+                   onJoin={handleJoinMeeting}
+                   onLeave={handleLeaveMeeting}
+                   onEdit={handleEditMeeting}
+               />
             }
         </div>
     )
-
-
+function handleEditMeeting(meeting) {
+    setEditingMeeting(meeting);
+}
 }

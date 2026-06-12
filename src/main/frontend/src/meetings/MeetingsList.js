@@ -5,8 +5,10 @@ export default function MeetingsList({
     username,
     onDelete,
     onJoin,
-    onLeave
-}) {
+    onLeave,
+    onEdit
+})
+{
     return (
         <table>
             <thead>
@@ -32,19 +34,37 @@ export default function MeetingsList({
                             <td>
                                 {
                                     joined
-                                        ? <button
-                                            type="button"
-                                            onClick={() => onLeave(meeting)}
-                                          >
-                                            Wypisz się
-                                          </button>
+                                        ? <>
+                                            <button
+                                                type="button"
+                                                onClick={() => onLeave(meeting)}
+                                            >
+                                                Wypisz się
+                                            </button>
 
-                                        : <button
-                                            type="button"
-                                            onClick={() => onJoin(meeting)}
-                                          >
-                                            Zapisz się
-                                          </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => onEdit(meeting)}
+                                            >
+                                                Edytuj
+                                            </button>
+                                          </>
+
+                                        : <>
+                                            <button
+                                                type="button"
+                                                onClick={() => onJoin(meeting)}
+                                            >
+                                                Zapisz się
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => onEdit(meeting)}
+                                            >
+                                                Edytuj
+                                            </button>
+                                          </>
                                 }
                                 {
                                     meeting.participants.length === 0 &&
