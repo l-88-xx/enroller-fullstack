@@ -126,3 +126,13 @@ h2 {
     transform: scale(1);
   }
 }
+
+
+tbody tr {
+  transition: all .25s ease;
+}
+
+tbody tr:hover {
+  background: #f8f8f8;
+  transform: scale(1.01);
+}

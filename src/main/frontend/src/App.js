@@ -33,6 +33,7 @@ function logout() {
              newestOnTop
              closeOnClick
              pauseOnHover
+             theme="colored"
          />
          <h1>System do zapisów na zajęcia</h1>
          {loggedIn
