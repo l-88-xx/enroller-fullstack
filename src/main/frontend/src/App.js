@@ -20,12 +20,19 @@ function App() {
         setLoggedIn('');
     }
 
-    return (
-        <div>
-            <h1>System do zapisów na zajęcia</h1>
-            {loggedIn ? <UserPanel username={loggedIn} onLogout={logout}/> : <LoginForm onLogin={login}/>}
-        </div>
-    );
+ return (
+     <div>
+         <ToastContainer />
+
+         <h1>System do zapisów na zajęcia</h1>
+
+         {loggedIn
+             ? <UserPanel username={loggedIn} onLogout={logout}/>
+             : <LoginForm onLogin={login}/>
+         }
+
+     </div>
+ );
 }
 
 export default App;

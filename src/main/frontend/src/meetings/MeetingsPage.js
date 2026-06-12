@@ -37,6 +37,19 @@ useEffect(() => {
 
 //Dodawanie spotkań
 async function handleNewMeeting(meeting) {
+
+    const duplicate = meetings.some(
+        m =>
+            m.title.trim().toLowerCase() === meeting.title.trim().toLowerCase()
+            &&
+            m.date === meeting.date
+    );
+
+    if (duplicate) {
+        toast.error('Spotkanie już istnieje w wybranym terminie.');
+        return;
+    }
+
     setLoading(true);
     try {
         const response = await fetch('/api/meetings', {

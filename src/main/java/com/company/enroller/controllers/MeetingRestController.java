@@ -60,6 +60,7 @@ public class MeetingRestController {
     // POST/meetings
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> addMeeting(@RequestBody Meeting meeting) {
+
         if (meetingService.alreadyExist(meeting)) {
             return new ResponseEntity<String>("Unable to add. A meeting with title " + meeting.getTitle() + " and date "
                     + meeting.getDate() + " already exist.", HttpStatus.CONFLICT);

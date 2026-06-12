@@ -63,11 +63,25 @@ public class MeetingService {
     }
 
     public boolean alreadyExist(Meeting meeting) {
-        String hql = "FROM Meeting WHERE title=:title AND date=:date";
-        Query query = this.session.createQuery(hql);
-        Collection resultList = query.setParameter("title", meeting.getTitle()).setParameter("date", meeting.getDate())
-                .list();
-        return query.list().size() != 0;
-    }
 
+        for (Object o : session.createQuery("FROM Meeting").list()) {
+            Meeting m = (Meeting) o;
+
+            System.out.println(
+                    "[" + m.getTitle() + "] [" + m.getDate() + "]"
+            );
+        }
+
+        String hql = "FROM Meeting WHERE title=:title AND date=:date";
+
+        Query query = this.session.createQuery(hql);
+
+        int count = query
+                .setParameter("title", meeting.getTitle())
+                .setParameter("date", meeting.getDate())
+                .list()
+                .size();
+
+        return count > 0;
+    }
 }
