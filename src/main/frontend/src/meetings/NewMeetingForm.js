@@ -1,20 +1,31 @@
 import {useState} from "react";
+import { toast } from "react-toastify";
 
 export default function NewMeetingForm({onSubmit}) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
 
-    function submit(event) {
-        event.preventDefault();
+ function submit(event) {
+     event.preventDefault();
 
-        onSubmit({
-            title,
-            description,
-            date,
-            participants: []
-        });
+    if (!title.trim()) {
+    toast.error("Podaj nazwę spotkania");
+    return;
     }
+
+    if (!date) {
+    toast.error("Wybierz datę spotkania");
+    return;
+    }
+
+     onSubmit({
+         title,
+         description,
+         date,
+         participants: []
+     });
+ }
 
     return (
         <form onSubmit={submit}>

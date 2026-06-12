@@ -22,7 +22,13 @@ function App() {
 
  return (
      <div>
-         <ToastContainer />
+         <ToastContainer
+             position="top-right"
+             autoClose={3000}
+             newestOnTop
+             closeOnClick
+             pauseOnHover
+         />
 
          <h1>System do zapisów na zajęcia</h1>
 
