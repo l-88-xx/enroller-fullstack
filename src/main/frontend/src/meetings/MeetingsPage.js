@@ -13,6 +13,7 @@ export default function MeetingsPage({username}) {
     const [loading, setLoading] = useState(false);
     const [addingNewMeeting, setAddingNewMeeting] = useState(false);
     const [search, setSearch] = useState('');
+    const [sortOrder, setSortOrder] = useState('asc');
     const [editingMeeting, setEditingMeeting] = useState(null);
     const token = localStorage.getItem('token');
 
@@ -236,12 +237,30 @@ async function handleNewMeeting(meeting) {
         setLoading(false);
     }
 }
-   const filteredMeetings = meetings.filter(
+
+const filteredMeetings = [...meetings]
+    .sort((a, b) => {
+
+        if (sortOrder === 'asc') {
+            return (
+                new Date(a.date) -
+                new Date(b.date)
+            );
+        }
+        return (
+            new Date(b.date) -
+            new Date(a.date)
+        );
+    })
+    .filter(
         meeting =>
             meeting.title
                 .toLowerCase()
-                .includes(search.toLowerCase())
+                .includes(
+                    search.toLowerCase()
+                )
     );
+ 
     return (
         <div>
             {loading && (
@@ -256,6 +275,16 @@ async function handleNewMeeting(meeting) {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
+            <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}>
+                <option value="asc">
+                    Data rosnąco
+                </option>
+                <option value="desc">
+                    Data malejąco
+                </option>
+            </select>
             {
                 addingNewMeeting
                     ? <NewMeetingForm onSubmit={(meeting) => handleNewMeeting(meeting)}/>
