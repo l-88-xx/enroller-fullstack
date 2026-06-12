@@ -66,6 +66,7 @@ async function handleNewMeeting(meeting) {
 
             setMeetings(nextMeetings);
             setAddingNewMeeting(false);
+            toast.success('Zostało dodane spotkanie');
         } else {
             const message = await response.text();
             toast.error(message);
@@ -141,8 +142,7 @@ async function handleNewMeeting(meeting) {
         }
 
         // wypisanie
-async function handleLeaveMeeting(meeting) {
-
+    async function handleLeaveMeeting(meeting) {
     setLoading(true);
 
     try {
