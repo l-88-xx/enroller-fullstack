@@ -83,6 +83,15 @@ async function handleNewMeeting(meeting) {
 }
       // Usuwanie spotkań
        async function handleDeleteMeeting(meeting) {
+
+       if (
+           !window.confirm(
+               `Czy na pewno chcesz usunąć spotkanie "${meeting.title}"?`
+           )
+       ) {
+           return;
+       }
+
            setLoading(true);
            try {
                const response = await fetch(
@@ -98,7 +107,9 @@ async function handleNewMeeting(meeting) {
                    const nextMeetings =
                        meetings.filter(m => m.id !== meeting.id);
                    setMeetings(nextMeetings);
-                   toast.success('Zostało usunięte spotkanie');
+                  toast.success(
+                      `Spotkanie "${meeting.title}" zostało pomyślnie usunięte.`
+                  );
                } else {
                    const message = await response.text();
                    toast.error(message);
@@ -260,7 +271,7 @@ const filteredMeetings = [...meetings]
                     search.toLowerCase()
                 )
     );
- 
+
     return (
         <div>
             {loading && (
@@ -268,7 +279,7 @@ const filteredMeetings = [...meetings]
                     <Loader />
                 </div>
             )}
-            <h2>Zajęcia ({meetings.length})</h2>
+           <h2>Zajęcia ({filteredMeetings.length})</h2>
             <input
                 type="text"
                 placeholder="Wyszukaj spotkania..."
