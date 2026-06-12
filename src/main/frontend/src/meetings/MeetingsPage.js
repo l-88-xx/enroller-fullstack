@@ -12,6 +12,7 @@ export default function MeetingsPage({username}) {
     const [meetings, setMeetings] = useState([]);
     const [loading, setLoading] = useState(false);
     const [addingNewMeeting, setAddingNewMeeting] = useState(false);
+    const [search, setSearch] = useState('');
     const [editingMeeting, setEditingMeeting] = useState(null);
     const token = localStorage.getItem('token');
 
@@ -153,21 +154,20 @@ async function handleNewMeeting(meeting) {
         async function handleUpdateMeeting(updatedMeeting) {
 
         const duplicate = meetings.some(
-            m =>
-                m.id !== updatedMeeting.id &&
-                m.title.trim().toLowerCase() ===
-                    updatedMeeting.title.trim().toLowerCase() &&
-                m.date === updatedMeeting.date);
+             m =>
+                 m.id !== updatedMeeting.id &&
+                 m.title.trim().toLowerCase() ===
+                     updatedMeeting.title.trim().toLowerCase()
+         );
 
         if (duplicate) {
             toast.error(
-                'Spotkanie o takiej nazwie, dacie już istnieje.'
+                'Spotkanie o takiej nazwie już istnieje.'
             );
             return;
         }
 
-            const token =
-                localStorage.getItem('token');
+            const token =localStorage.getItem('token');
             const response = await fetch(
                 `/api/meetings/${updatedMeeting.id}`,
                 {
@@ -236,6 +236,12 @@ async function handleNewMeeting(meeting) {
         setLoading(false);
     }
 }
+   const filteredMeetings = meetings.filter(
+        meeting =>
+            meeting.title
+                .toLowerCase()
+                .includes(search.toLowerCase())
+    );
     return (
         <div>
             {loading && (
@@ -244,6 +250,12 @@ async function handleNewMeeting(meeting) {
                 </div>
             )}
             <h2>Zajęcia ({meetings.length})</h2>
+            <input
+                type="text"
+                placeholder="Wyszukaj spotkania..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+            />
             {
                 addingNewMeeting
                     ? <NewMeetingForm onSubmit={(meeting) => handleNewMeeting(meeting)}/>
@@ -264,7 +276,7 @@ async function handleNewMeeting(meeting) {
             }
             {meetings.length > 0 &&
                <MeetingsList
-                   meetings={meetings}
+                   meetings={filteredMeetings}
                    username={username}
                    onDelete={handleDeleteMeeting}
                    onJoin={handleJoinMeeting}
@@ -274,6 +286,7 @@ async function handleNewMeeting(meeting) {
             }
         </div>
     )
+
 function handleEditMeeting(meeting) {
     setEditingMeeting(meeting);
 }

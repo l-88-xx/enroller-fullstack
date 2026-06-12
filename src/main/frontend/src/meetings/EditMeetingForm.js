@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from 'react-toastify';
 
 export default function EditMeetingForm({
     meeting,
@@ -13,6 +14,15 @@ export default function EditMeetingForm({
         );
     function submit(event) {
         event.preventDefault();
+        if (!title.trim()) {
+            toast.error('Podaj nazwę spotkania');
+            return;
+        }
+
+        if (!description.trim()) {
+            toast.error('Podaj opis spotkania');
+            return;
+        }
         onSubmit({
             ...meeting,
             title,
@@ -25,14 +35,18 @@ export default function EditMeetingForm({
             onSubmit={submit}>
             <h3>Edycja spotkania</h3>
             <label>Nazwa</label>
+
             <input
+                required
                 value={title}
                 onChange={(e) =>
                     setTitle(e.target.value)
                 }
             />
+
             <label>Opis</label>
             <textarea
+                required
                 value={description}
                 onChange={(e) =>
                     setDescription(
