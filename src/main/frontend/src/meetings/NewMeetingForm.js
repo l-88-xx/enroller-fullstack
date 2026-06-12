@@ -37,8 +37,11 @@ export default function NewMeetingForm({onSubmit}) {
             <textarea value={description}
                       onChange={(e) => setDescription(e.target.value)}></textarea>
             <label>Data spotkania</label>
-            <input type="date" value={date}
-                       onChange={(e) => setDate(e.target.value)}/>
+          <input
+              type="date"
+              min={new Date().toISOString().split('T')[0]}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}/>
             <button>Dodaj</button>
         </form>
     );
