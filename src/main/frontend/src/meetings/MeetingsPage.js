@@ -150,9 +150,22 @@ async function handleNewMeeting(meeting) {
         }
 
         // edycja
-        async function handleUpdateMeeting(
-            updatedMeeting
-        ) {
+        async function handleUpdateMeeting(updatedMeeting) {
+
+        const duplicate = meetings.some(
+            m =>
+                m.id !== updatedMeeting.id &&
+                m.title.trim().toLowerCase() ===
+                    updatedMeeting.title.trim().toLowerCase() &&
+                m.date === updatedMeeting.date);
+
+        if (duplicate) {
+            toast.error(
+                'Spotkanie o takiej nazwie, dacie już istnieje.'
+            );
+            return;
+        }
+
             const token =
                 localStorage.getItem('token');
             const response = await fetch(
