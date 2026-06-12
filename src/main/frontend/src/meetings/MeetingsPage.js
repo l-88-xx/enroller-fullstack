@@ -11,6 +11,7 @@ export default function MeetingsPage({username}) {
     const [meetings, setMeetings] = useState([]);
     const [loading, setLoading] = useState(false);
     const [addingNewMeeting, setAddingNewMeeting] = useState(false);
+    const token = localStorage.getItem('token');
 
 // Pobieranie
 // useEffect wykonuje tylko przy pierwszym renderowaniu
@@ -18,7 +19,11 @@ useEffect(() => {
  const fetchMeetings = async () => {
      setLoading(true);
      try {
-         const response = await fetch(`/api/meetings`);
+         const response = await fetch('/api/meetings', {
+             headers: {
+                 Authorization: `Bearer ${token}`
+             }
+         });
 
          if (response.ok) {
              const meetings = await response.json();
@@ -56,7 +61,8 @@ async function handleNewMeeting(meeting) {
             method: 'POST',
             body: JSON.stringify(meeting),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
             }
         });
         if (response.ok) {
@@ -83,7 +89,10 @@ async function handleNewMeeting(meeting) {
                const response = await fetch(
                    `/api/meetings/${meeting.id}`,
                    {
-                       method: 'DELETE'
+                       method: 'DELETE',
+                       headers: {
+                           Authorization: `Bearer ${token}`
+                       }
                    }
                );
                if (response.ok) {
@@ -108,7 +117,10 @@ async function handleNewMeeting(meeting) {
                     `/api/meetings/${meeting.id}/participants`,
                     {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`
+                        },
                         body: JSON.stringify({
                             login: username
                         })
@@ -150,9 +162,12 @@ async function handleNewMeeting(meeting) {
 
         const response = await fetch(
             `/api/meetings/${meeting.id}/participants/${username}`,
-            {
-                method: 'DELETE'
-            }
+          {
+              method: 'DELETE',
+              headers: {
+                  Authorization: `Bearer ${token}`
+              }
+          }
         );
 
         if (response.ok) {

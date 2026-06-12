@@ -6,19 +6,24 @@ import UserPanel from "./UserPanel";
 // obsługa błędów
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import RegisterForm from "./RegisterForm";
 
 function App() {
-    const [loggedIn, setLoggedIn] = useState('');
+    const [loggedIn, setLoggedIn] = useState(
+        localStorage.getItem('login') || '');
 
-    function login(email) {
-        if (email) {
-            setLoggedIn(email);
-        }
-    }
+ function login(login) {
+     localStorage.setItem(
+         'login',
+         login);
+     setLoggedIn(login);
+ }
 
-    function logout() {
-        setLoggedIn('');
-    }
+function logout() {
+    localStorage.removeItem('login');
+    localStorage.removeItem('token');
+    setLoggedIn('');
+}
 
  return (
      <div>
@@ -29,14 +34,15 @@ function App() {
              closeOnClick
              pauseOnHover
          />
-
          <h1>System do zapisów na zajęcia</h1>
-
          {loggedIn
              ? <UserPanel username={loggedIn} onLogout={logout}/>
-             : <LoginForm onLogin={login}/>
+             : <>
+                   <LoginForm onLogin={login}/>
+                   <hr />
+                   <RegisterForm />
+               </>
          }
-
      </div>
  );
 }
