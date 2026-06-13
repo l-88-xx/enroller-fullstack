@@ -48,7 +48,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JWTAuthenticationFilter(
-                        authenticationManager(),
+                                authenticationManager(),
                                 secret,
                                 issuer,
                                 tokenExpiration),

@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,8 +26,6 @@ import java.util.Date;
 //filtr requestów, który wystawi token JWT gdy klient prześle poprawne dane logowania
 
 public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-
-
 
 
     private AuthenticationManager authenticationManager;

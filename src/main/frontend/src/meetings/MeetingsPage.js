@@ -30,14 +30,11 @@ useEffect(() => {
              }
          });
          if (response.status === 401) {
-
              localStorage.removeItem('token');
              localStorage.removeItem('login');
-
              toast.error(
                  'Sesja wygasła. Zaloguj się ponownie.'
              );
-
              window.location.reload();
              return;
          }
@@ -56,14 +53,12 @@ useEffect(() => {
 
 //Dodawanie spotkań
 async function handleNewMeeting(meeting) {
-
     const duplicate = meetings.some(
         m =>
             m.title.trim().toLowerCase() === meeting.title.trim().toLowerCase()
             &&
             m.date === meeting.date
     );
-
     if (duplicate) {
         toast.error('Spotkanie już istnieje w wybranym terminie.');
         return;
