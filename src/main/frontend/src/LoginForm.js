@@ -6,39 +6,58 @@ export default function LoginForm({ onLogin, buttonLabel }) {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
-    async function handleLogin() {
+   async function handleLogin() {
 
-        try {
-            const response = await fetch('/tokens', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    login,
-                    password
-                })
-            });
-            if (response.ok) {
-                const result = await response.json();
-                localStorage.setItem(
-                    'token',
-                    result.token
-                );
-                onLogin(login);
-                toast.success('Zalogowano.');
+       try {
 
-            } else {
-                toast.error(
-                    'Niepoprawny login lub hasło.'
-                );
-            }
-        } catch (error) {
-            toast.error(
-                'Nie połączono z serwerem.'
-            );
-        }
-    }
+           const response = await fetch('/tokens', {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json'
+               },
+               body: JSON.stringify({
+                   login,
+                   password
+               })
+           });
+
+           if (response.ok) {
+
+               const result = await response.json();
+
+               localStorage.setItem(
+                   'token',
+                   result.token
+               );
+
+               onLogin(login);
+
+               toast.success(
+                   'Zalogowano.'
+               );
+
+           } else if (response.status === 401) {
+
+               toast.error(
+                   'Niepoprawny login lub hasło.'
+               );
+
+           } else {
+
+               toast.error(
+                   'Błąd serwera.'
+               );
+
+           }
+
+       } catch (error) {
+
+           toast.error(
+               'Nie połączono z serwerem.'
+           );
+
+       }
+   }
 
     return (
         <div>
