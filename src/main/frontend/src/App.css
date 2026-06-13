@@ -136,3 +136,59 @@ tbody tr:hover {
   background: #f8f8f8;
   transform: scale(1.01);
 }
+
+input,
+textarea,
+select {
+  max-width: 500px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.form-buttons button {
+  margin-bottom: 0;
+}
+
+.form-slide {
+  max-width: 600px;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.modal {
+  background: white;
+
+  padding: 25px;
+
+  border-radius: 10px;
+
+  min-width: 400px;
+
+  box-shadow:
+      0 10px 30px rgba(0,0,0,.2);
+}
+
+.modal-buttons {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 20px;
+}

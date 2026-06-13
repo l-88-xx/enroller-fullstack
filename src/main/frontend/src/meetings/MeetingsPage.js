@@ -15,6 +15,7 @@ export default function MeetingsPage({username}) {
     const [search, setSearch] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
     const [editingMeeting, setEditingMeeting] = useState(null);
+    const [meetingToDelete, setMeetingToDelete] = useState(null);
     const token = localStorage.getItem('token');
 
 // Pobieranie
@@ -108,15 +109,7 @@ async function handleNewMeeting(meeting) {
       // Usuwanie spotkań
        async function handleDeleteMeeting(meeting) {
 
-       if (
-           !window.confirm(
-               `Czy na pewno chcesz usunąć spotkanie "${meeting.title}"?`
-           )
-       ) {
-           return;
-       }
-
-           setLoading(true);
+          setLoading(true);
            try {
                const response = await fetch(
                    `/api/meetings/${meeting.id}`,
@@ -143,6 +136,7 @@ async function handleNewMeeting(meeting) {
                    const nextMeetings =
                        meetings.filter(m => m.id !== meeting.id);
                    setMeetings(nextMeetings);
+                   setMeetingToDelete(null);
                   toast.success(
                       `Spotkanie "${meeting.title}" zostało pomyślnie usunięte.`
                   );
@@ -367,22 +361,59 @@ const filteredMeetings = [...meetings]
             {
                 editingMeeting &&
                 <EditMeetingForm
-                    meeting={editingMeeting}
-                    onSubmit={
-                        handleUpdateMeeting
-                    }
+                        meeting={editingMeeting}
+                        onSubmit={handleUpdateMeeting}
+                        onCancel={() =>
+                            setEditingMeeting(null)
+                            }
                 />
             }
             {meetings.length > 0 &&
                <MeetingsList
                    meetings={filteredMeetings}
                    username={username}
-                   onDelete={handleDeleteMeeting}
+                   onDelete={setMeetingToDelete}
                    onJoin={handleJoinMeeting}
                    onLeave={handleLeaveMeeting}
                    onEdit={handleEditMeeting}
                />
             }
+{
+    meetingToDelete &&
+    <div className="modal-overlay">
+        <div className="modal">
+            <h3>Usuń spotkanie</h3>
+            <p>
+                Czy na pewno chcesz usunąć spotkanie
+                <strong>
+                    {" "}{meetingToDelete.title}
+                </strong>?
+            </p>
+            <p>
+                OPeracja jest nieodwracalna.
+            </p>
+            <div className="modal-buttons">
+                <button
+                    className="button button-outline"
+                    onClick={() =>
+                        setMeetingToDelete(null)
+                    }
+                >
+                    Anuluj
+                </button>
+                <button
+                    onClick={() =>
+                        handleDeleteMeeting(
+                            meetingToDelete
+                        )
+                    }
+                >
+                    Usuń
+                </button>
+            </div>
+        </div>
+    </div>
+}
         </div>
     )
 

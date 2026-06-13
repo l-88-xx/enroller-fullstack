@@ -3,7 +3,8 @@ import { toast } from 'react-toastify';
 
 export default function EditMeetingForm({
     meeting,
-    onSubmit
+    onSubmit,
+    onCancel
 }) {
     const [title, setTitle] = useState(
         meeting.title
@@ -54,9 +55,19 @@ export default function EditMeetingForm({
                     )
                 }
             />
-            <button>
-                Zapisz zmiany
-            </button>
+         <div className="form-buttons">
+             <button type="submit">
+                 Zapisz zmiany
+             </button>
+
+             <button
+                 type="button"
+                 className="button button-outline"
+                 onClick={onCancel}
+             >
+                 Anuluj
+             </button>
+         </div>
         </form>
     );
 }
