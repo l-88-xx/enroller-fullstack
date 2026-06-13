@@ -132,6 +132,8 @@ async function handleNewMeeting(meeting) {
                    window.location.reload();
                    return;
                }
+
+
                if (response.ok) {
                    const nextMeetings =
                        meetings.filter(m => m.id !== meeting.id);
@@ -166,14 +168,11 @@ async function handleNewMeeting(meeting) {
                     }
                 );
                 if (response.status === 401) {
-
                     localStorage.removeItem('token');
                     localStorage.removeItem('login');
-
                     toast.error(
                         'Sesja wygasła. Zaloguj się ponownie.'
                     );
-
                     window.location.reload();
                     return;
                 }
@@ -190,7 +189,6 @@ async function handleNewMeeting(meeting) {
                         }
                         return m;
                     });
-
                     setMeetings(nextMeetings);
                 } else {
                     const message = await response.text();

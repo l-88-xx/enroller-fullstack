@@ -48,9 +48,7 @@ public class ParticipantRestController {
         //szyfrowanie hasła
         String hashedPassword = passwordEncoder.encode(participant.getPassword());
         participant.setPassword(hashedPassword);
-
         participantService.add(participant);
-
         return new ResponseEntity<Participant>(participant, HttpStatus.CREATED);
     }
 
@@ -70,8 +68,8 @@ public class ParticipantRestController {
         if (participant == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+        participant.setPassword(updatedParticipant.getPassword());
         participantService.update(participant);
         return new ResponseEntity<Participant>(HttpStatus.OK);
     }
-
 }

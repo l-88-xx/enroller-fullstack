@@ -109,7 +109,10 @@ public class MeetingRestController {
         }
         meeting.addParticipant(participant);
         meetingService.update(meeting);
-        return new ResponseEntity<>(participant, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                meeting,
+                HttpStatus.CREATED
+        );
     }
 
     // Wypisanie ze spotkania

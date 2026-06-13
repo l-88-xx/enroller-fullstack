@@ -60,7 +60,7 @@ public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFil
             throw new BadCredentialsException("Niepoprawny login request.", e);
         }
     }
-    
+
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException {
         String login = ((UserDetails) auth.getPrincipal()).getUsername();
