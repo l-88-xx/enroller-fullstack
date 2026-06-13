@@ -16,6 +16,7 @@ export default function MeetingsList({
                 <th>Nazwa spotkania</th>
                 <th>Opis</th>
                  <th>Data</th>
+                  <th>Uczestnicy</th>
                 <th>Akcje</th>
             </tr>
             </thead>
@@ -31,6 +32,15 @@ export default function MeetingsList({
                             <td>{meeting.title}</td>
                             <td>{meeting.description}</td>
                             <td>{new Date(meeting.date).toLocaleDateString('pl-PL')}</td>
+
+                            <td>
+                                {meeting.participants.map(p => (
+                                    <div key={p.login}>
+                                        {p.login}
+                                    </div>
+                                ))}
+                            </td>
+
                             <td>
                                 {
                                     joined
